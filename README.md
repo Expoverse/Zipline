@@ -8,4 +8,3 @@ Go program to backup remote folders.
 This software tarballs (backup.tar.gz) the remote folders and then downloads to local destination.
 
 
- 
