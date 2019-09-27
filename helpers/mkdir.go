@@ -1,4 +1,8 @@
-package mkdir
+package helpers
+
+import (
+	"os"
+)
 
 func mkdir(directory string)  {
 	if _, err := os.Stat(directory); os.IsNotExist(err) {

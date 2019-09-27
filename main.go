@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/expoverse/zipline/helpers"
 	"fmt"
 	"golang.org/x/crypto/ssh"
 	"gopkg.in/yaml.v2"
@@ -9,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"time"
+	"github.com/Expoverse/zipline/helpers"
 )
 
 type Config []struct {
