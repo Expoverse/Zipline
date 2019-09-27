@@ -3,18 +3,46 @@ package main
 import (
 	"fmt"
 	"golang.org/x/crypto/ssh"
+	"gopkg.in/yaml.v2"
 	"io"
 	"io/ioutil"
 	"os"
 	"time"
 )
 
-func main() {
-	download("tar -zcf - ~/docker/apache/app/minestatus/public/products", "52.26.27.120", "id_rsa", "products")
-	download("tar -zcf - ~/docker/apache/app/minestatus/public/members", "52.26.27.120", "id_rsa", "members")
+type Config []struct {
+	Server struct {
+		RemoteSource     string `yaml:"remoteSource"`
+		Host             string `yaml:"host"`
+		PrivateKey       string `yaml:"privateKey"`
+		Username         string `yaml:"username"`
+		LocalDestination string `yaml:"localDestination"`
+	}
 }
 
-func clientConfigSetup(keyName string) *ssh.ClientConfig {
+func main() {
+	configs := Config{}
+	source, err := ioutil.ReadFile("config.yml")
+	if err != nil {
+		panic(err)
+	}
+	err = yaml.Unmarshal(source, &configs)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, config := range configs {
+		source := config.Server.RemoteSource
+		host := config.Server.Host
+		privateKey := config.Server.PrivateKey
+		username := config.Server.Username
+		localDestination := config.Server.LocalDestination
+
+		download(source, host, privateKey, username, localDestination)
+	}
+}
+
+func clientConfigSetup(keyName string, username string) *ssh.ClientConfig {
 	file, err := ioutil.ReadFile("privateKeys/" + keyName + ".pem")
 	if err != nil {
 		panic(err.Error())
@@ -22,7 +50,7 @@ func clientConfigSetup(keyName string) *ssh.ClientConfig {
 
 	signer, _ := ssh.ParsePrivateKey(file)
 	clientConfig := &ssh.ClientConfig{
-		User: "ubuntu",
+		User: username,
 		Auth: []ssh.AuthMethod{
 			ssh.PublicKeys(signer),
 		},
@@ -36,8 +64,8 @@ func isOlderThanSixyDays(t time.Time) bool {
 	return time.Now().Sub(t) > 1440*time.Hour
 }
 
-func download(cmd, hostname string, pem string, destination string) {
-	config := clientConfigSetup(pem)
+func download(cmd, hostname string, pem string, username string, destination string) {
+	config := clientConfigSetup(pem, username)
 	fmt.Println("Backup started... [" + destination + "]")
 
 	conn, err := ssh.Dial("tcp", hostname+":22", config)
@@ -91,7 +119,7 @@ func download(cmd, hostname string, pem string, destination string) {
 	}
 	defer file.Close()
 
-	if err := session.Start(cmd); err != nil {
+	if err := session.Start("tar -zcf - " + cmd); err != nil {
 		panic(err.Error())
 	}
 

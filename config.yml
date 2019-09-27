@@ -1,0 +1,12 @@
+- server:
+    remoteSource: ~/example/directory/products
+    host: 192.168.2.1
+    privateKey: id_rsa
+    username: ubuntu
+    localDestination: products
+- server:
+    remoteSource: ~/example/directory/members
+    host: 10.0.1.2
+    privateKey: id_rsa
+    username: user
+    localDestination: members
