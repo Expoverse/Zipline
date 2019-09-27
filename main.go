@@ -21,6 +21,7 @@ type Config []struct {
 }
 
 func main() {
+	setup()
 	configs := Config{}
 	source, err := ioutil.ReadFile("config.yml")
 	if err != nil {
@@ -40,6 +41,19 @@ func main() {
 
 		download(source, host, privateKey, username, localDestination)
 	}
+}
+
+func mkdir(directory string)  {
+	if _, err := os.Stat(directory); os.IsNotExist(err) {
+		_ = os.Mkdir(directory, 0655)
+	}
+}
+
+func setup()  {
+	// Create empty backup directory
+	mkdir("backups")
+	// Make empty privateKeys directory
+	mkdir("privateKeys")
 }
 
 func clientConfigSetup(keyName string, username string) *ssh.ClientConfig {
@@ -84,15 +98,8 @@ func download(cmd, hostname string, pem string, username string, destination str
 		panic(err.Error())
 	}
 
-	// Make parent directory
-	if _, err := os.Stat("backups"); os.IsNotExist(err) {
-		_ = os.Mkdir("backups", 0655)
-	}
-
-	// Make destination defined directory
-	if _, err := os.Stat("backups/" + destination); os.IsNotExist(err) {
-		_ = os.Mkdir("backups/"+destination, 0655)
-	}
+	// Make the local destination directory
+	mkdir("backups/" + destination)
 
 	//Delete backups older than 60 days
 	tmpfiles, err := ioutil.ReadDir("backups/" + destination)
