@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/expoverse/zipline/helpers"
 	"fmt"
 	"golang.org/x/crypto/ssh"
 	"gopkg.in/yaml.v2"
@@ -40,12 +41,6 @@ func main() {
 		localDestination := config.Server.LocalDestination
 
 		download(source, host, privateKey, username, localDestination)
-	}
-}
-
-func mkdir(directory string)  {
-	if _, err := os.Stat(directory); os.IsNotExist(err) {
-		_ = os.Mkdir(directory, 0655)
 	}
 }
 
