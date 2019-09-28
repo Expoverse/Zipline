@@ -1,5 +1,4 @@
 version='0.0.1'
 platform='linux'
 curl -Lo zipline.tar.gz https://github.com/Expoverse/Zipline/releases/download/$version/zipline-linux-amd64.tar.gz
-tar zxf zipline.tar.gz && sudo mv zipline /usr/local/bin/zipline && rm zipline.tar.gz
-mkdir -p ~/.zipline
+tar zxf zipline.tar.gz -C /usr/local/bin/.zipline && sudo mv /usr/local/bin/.zipline/zipline /usr/local/bin/zipline && rm zipline.tar.gz

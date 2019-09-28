@@ -23,7 +23,7 @@ type Config []struct {
 func main() {
 	setup()
 	configs := Config{}
-	source, err := ioutil.ReadFile("config.yml")
+	source, err := ioutil.ReadFile("/usr/local/bin/.zipline/config.yml")
 	if err != nil {
 		panic(err)
 	}
@@ -51,13 +51,13 @@ func mkdir(directory string)  {
 
 func setup()  {
 	// Create empty backup directory
-	mkdir("/usr/local/bin/backups")
+	mkdir("/usr/local/bin/.zipline/backups")
 	// Make empty privateKeys directory
-	mkdir("/usr/local/bin/privateKeys")
+	mkdir("/usr/local/bin/.zipline/privateKeys")
 }
 
 func clientConfigSetup(keyName string, username string) *ssh.ClientConfig {
-	file, err := ioutil.ReadFile("/usr/local/bin/privateKeys/" + keyName + ".pem")
+	file, err := ioutil.ReadFile("/usr/local/bin/.zipline/privateKeys/" + keyName + ".pem")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -99,10 +99,10 @@ func download(cmd string, hostname string, pem string, username string, destinat
 	}
 
 	// Make the local destination directory
-	mkdir("/usr/local/bin/backups/" + destination)
+	mkdir("/usr/local/bin/.zipline/backups/" + destination)
 
 	//Delete backups older than 60 days
-	tmpfiles, err := ioutil.ReadDir("/usr/local/bin/backups/" + destination)
+	tmpfiles, err := ioutil.ReadDir("/usr/local/bin/.zipline/backups/" + destination)
 	if err != nil {
 		return
 	}
@@ -110,7 +110,7 @@ func download(cmd string, hostname string, pem string, username string, destinat
 	for _, file := range tmpfiles {
 		if file.Mode().IsRegular() {
 			if isOlderThanSixyDays(file.ModTime()) {
-				err = os.Remove("/usr/local/bin/backups/" + destination + "/" + file.Name())
+				err = os.Remove("/usr/local/bin/.zipline/backups/" + destination + "/" + file.Name())
 				if err != nil {
 					panic(err.Error())
 				}
@@ -119,7 +119,7 @@ func download(cmd string, hostname string, pem string, username string, destinat
 	}
 
 	t := time.Now()
-	name := fmt.Sprintf("/usr/local/bin/backups/%s/%v.tar.gz", destination, t.Format("2006.01.02.15.04.05"))
+	name := fmt.Sprintf("/usr/local/bin/.zipline/backups/%s/%v.tar.gz", destination, t.Format("2006.01.02.15.04.05"))
 	file, err := os.OpenFile(name, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		panic(err.Error())
