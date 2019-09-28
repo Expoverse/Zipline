@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"os"
 	"time"
-	"github.com/Expoverse/zipline/helpers"
 )
 
 type Config []struct {
@@ -40,7 +39,7 @@ func main() {
 		username := config.Server.Username
 		localDestination := config.Server.LocalDestination
 
-		download(source, host, privateKey, username, localDestination)
+		download("tar -zcf - "+source, host, privateKey, username, localDestination)
 	}
 }
 
@@ -79,7 +78,7 @@ func isOlderThanSixyDays(t time.Time) bool {
 	return time.Now().Sub(t) > 1440*time.Hour
 }
 
-func download(cmd, hostname string, pem string, username string, destination string) {
+func download(cmd string, hostname string, pem string, username string, destination string) {
 	config := clientConfigSetup(pem, username)
 	fmt.Println("Backup started... [" + destination + "]")
 
@@ -127,7 +126,7 @@ func download(cmd, hostname string, pem string, username string, destination str
 	}
 	defer file.Close()
 
-	if err := session.Start("tar -zcf - " + cmd); err != nil {
+	if err := session.Start(cmd); err != nil {
 		panic(err.Error())
 	}
 

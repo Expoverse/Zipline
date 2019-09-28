@@ -1,12 +1,12 @@
 - server:
-    remoteSource: ~/example/directory/products
-    host: 192.168.2.1
+    remoteSource: ~/docker/apache/app/minestatus/public/products
+    host: 52.26.27.120
     privateKey: id_rsa
     username: ubuntu
     localDestination: products
 - server:
-    remoteSource: ~/example/directory/members
-    host: 10.0.1.2
+    remoteSource: ~/docker/apache/app/minestatus/public/members
+    host: 52.26.27.120
     privateKey: id_rsa
-    username: user
+    username: ubuntu
     localDestination: members
