@@ -9,7 +9,7 @@ This software tarballs (backup.tar.gz) the remote folders and then downloads to 
 
 #### Installing Zipline (Linux)
 ```bash
-$ curl -sSL https://github.com/Expoverse/Zipline.git | bash
+$ curl -sSL https://git.io/zipline | bash
 ```
   
 
