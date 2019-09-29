@@ -20,7 +20,7 @@ type Config []struct {
 	}
 }
 
-var base = "/root/.gobackup/"
+var base = "/home/.gobackup/"
 
 func main() {
 	setup()

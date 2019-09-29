@@ -1,5 +1,5 @@
 version='0.0.1'
 platform='linux'
-sudo curl -Lo zipline.tar.gz https://github.com/Expoverse/Zipline/releases/download/$version/zipline-linux-amd64.tar.gz
-sudo mkdir -p /root/.gobackup
-sudo tar zxf zipline.tar.gz -C /root/.gobackup && sudo mv /root/.gobackup/zipline /usr/local/bin/zipline && sudo rm zipline.tar.gz
+curl -Lo zipline.tar.gz https://github.com/Expoverse/Zipline/releases/download/$version/zipline-linux-amd64.tar.gz
+mkdir -p /home/.gobackup
+tar zxf zipline.tar.gz -C /home/.gobackup && sudo mv /home/.gobackup/zipline /usr/local/bin/zipline && rm zipline.tar.gz
