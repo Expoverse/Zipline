@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"os/user"
 	"time"
 )
 
@@ -52,6 +53,11 @@ func mkdir(directory string)  {
 }
 
 func setup()  {
+	usr, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+	base = usr.HomeDir+"/.gobackup/"
 	// Create empty backup directory
 	mkdir(base+"backups")
 	// Make empty privateKeys directory
