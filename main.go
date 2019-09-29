@@ -48,7 +48,7 @@ func main() {
 
 func mkdir(directory string)  {
 	if _, err := os.Stat(directory); os.IsNotExist(err) {
-		_ = os.Mkdir(directory, 0655)
+		_ = os.Mkdir(directory, 0755)
 	}
 }
 
@@ -128,7 +128,7 @@ func download(cmd string, hostname string, pem string, username string, destinat
 
 	t := time.Now()
 	name := fmt.Sprintf(base+"backups/%s/%v.tar.gz", destination, t.Format("2006.01.02.15.04.05"))
-	file, err := os.OpenFile(name, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	file, err := os.OpenFile(name, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0755)
 	if err != nil {
 		panic(err.Error())
 	}
