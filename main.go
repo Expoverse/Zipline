@@ -21,7 +21,7 @@ type Config []struct {
 	}
 }
 
-var base = "/home/.gobackup/"
+var base = "/home/.zipline/"
 
 func main() {
 	setup()
@@ -128,6 +128,8 @@ func download(cmd string, hostname string, pem string, username string, destinat
 
 	t := time.Now()
 	name := fmt.Sprintf(base+"backups/%s/%v.tar.gz", destination, t.Format("2006.01.02.15.04.05"))
+	print(name)
+
 	file, err := os.OpenFile(name, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0755)
 	if err != nil {
 		panic(err.Error())
