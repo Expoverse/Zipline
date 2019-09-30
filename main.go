@@ -57,7 +57,7 @@ func setup()  {
 	if err != nil {
 		panic(err)
 	}
-	base = usr.HomeDir+"/.zipline/"
+	base = "/home/"+usr.Username+"/.zipline/"
 	// Create empty backup directory
 	mkdir(base+"backups")
 	// Make empty privateKeys directory
@@ -128,19 +128,22 @@ func download(cmd string, hostname string, pem string, username string, destinat
 
 	t := time.Now()
 	name := fmt.Sprintf(base+"backups/%s/%v.tar.gz", destination, t.Format("2006.01.02.15.04.05"))
-	print(name)
 
+	// Create the file on the local machine
 	file, err := os.OpenFile(name, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0755)
 	if err != nil {
 		panic(err.Error())
 	}
 	defer file.Close()
 
+	// tarball the source folder to stdout
 	if err := session.Start(cmd); err != nil {
 		panic(err.Error())
 	}
 
-	_, err = io.Copy(file, r)
+	buf := make([]byte, 500)
+	// Write stdout to the create file
+	_, err = io.CopyBuffer(file, r, buf)
 	if err != nil {
 		panic(err.Error())
 	}
