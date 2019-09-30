@@ -21,7 +21,7 @@ type Config []struct {
 	}
 }
 
-var base = "/home/.zipline/"
+var base = ""
 
 func main() {
 	setup()
@@ -42,7 +42,7 @@ func main() {
 		username := config.Server.Username
 		localDestination := config.Server.LocalDestination
 
-		download("tar -zcf - "+source, host, privateKey, username, localDestination)
+		download(source, host, privateKey, username, localDestination)
 	}
 }
 
@@ -57,7 +57,9 @@ func setup()  {
 	if err != nil {
 		panic(err)
 	}
+	print(usr.Username)
 	base = "/home/"+usr.Username+"/.zipline/"
+
 	// Create empty backup directory
 	mkdir(base+"backups")
 	// Make empty privateKeys directory
@@ -86,7 +88,7 @@ func isOlderThanSixyDays(t time.Time) bool {
 	return time.Now().Sub(t) > 1440*time.Hour
 }
 
-func download(cmd string, hostname string, pem string, username string, destination string) {
+func download(source string, hostname string, pem string, username string, destination string) {
 	config := clientConfigSetup(pem, username)
 	fmt.Println("Backup started... [" + destination + "]")
 
@@ -137,13 +139,12 @@ func download(cmd string, hostname string, pem string, username string, destinat
 	defer file.Close()
 
 	// tarball the source folder to stdout
-	if err := session.Start(cmd); err != nil {
+	if err := session.Start("tar -cf - "+source); err != nil {
 		panic(err.Error())
 	}
 
-	buf := make([]byte, 1000)
 	// Write stdout to the create file
-	_, err = io.CopyBuffer(file, r, buf)
+	_, err = io.Copy(file, r)
 	if err != nil {
 		panic(err.Error())
 	}
