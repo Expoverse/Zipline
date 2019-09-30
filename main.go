@@ -141,7 +141,7 @@ func download(cmd string, hostname string, pem string, username string, destinat
 		panic(err.Error())
 	}
 
-	buf := make([]byte, 500)
+	buf := make([]byte, 1000)
 	// Write stdout to the create file
 	_, err = io.CopyBuffer(file, r, buf)
 	if err != nil {
