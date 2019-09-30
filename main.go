@@ -22,6 +22,7 @@ type Config []struct {
 }
 
 var base = ""
+var start = time.Now()
 
 func main() {
 	setup()
@@ -44,6 +45,9 @@ func main() {
 
 		download(source, host, privateKey, username, localDestination)
 	}
+	t := time.Now()
+	elapsed := t.Sub(start)
+	fmt.Println(elapsed)
 }
 
 func mkdir(directory string)  {
@@ -57,6 +61,7 @@ func setup()  {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println(usr.Username)
 	base = "/home/"+usr.Username+"/.zipline/"
 	// Create empty backup directory
 	mkdir(base+"backups")
@@ -136,8 +141,8 @@ func download(source string, hostname string, pem string, username string, desti
 	}
 	defer file.Close()
 
-	// tarball the source folder to stdout
-	if err := session.Start("tar -cf - "+source); err != nil {
+	// compress the source folder to stdout
+	if err := session.Start("tar -cf - "+source+" | pigz -p 4 -1 > /dev/stdout"); err != nil {
 		panic(err.Error())
 	}
 
