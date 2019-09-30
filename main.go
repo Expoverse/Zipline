@@ -57,7 +57,7 @@ func setup()  {
 	if err != nil {
 		panic(err)
 	}
-	base = usr.HomeDir+"/.gobackup/"
+	base = usr.HomeDir+"/.zipline/"
 	// Create empty backup directory
 	mkdir(base+"backups")
 	// Make empty privateKeys directory
